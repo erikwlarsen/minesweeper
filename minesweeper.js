@@ -151,6 +151,6 @@ function gameOver(grid) {
 }
 
 function goodbye() {
-  rl.write('\nGoodbye!\n\n')
+  rl.write(rainbow('\nGoodbye!\n\n'));
   rl.close();
 }
