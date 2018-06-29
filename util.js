@@ -1,5 +1,23 @@
 const chalk = require('chalk');
 
+const gameInfo = {
+  easy: {
+    mines: 10,
+    x: 8,
+    y: 8,
+  },
+  medium: {
+    mines: 40,
+    x: 16,
+    y: 16,
+  },
+  hard: {
+    mines: 99,
+    x: 32,
+    y: 16,
+  }
+}
+
 const validateData = (x, y, flag, grid) => {
   const gridX = grid[1].length - 2;
   const gridY = grid.length - 2;
@@ -15,22 +33,8 @@ const validateData = (x, y, flag, grid) => {
 const copyGrid = grid => grid.map((row) => row.slice());
 
 const createGrid = (difficulty) => {
-  let x, y;
-
-  switch (difficulty) {
-    case 'easy':
-      x = y = 8;
-      break;
-    case 'medium':
-      x = y = 16;
-      break;
-    case 'hard':
-      x = 32;
-      y = 16;
-      break;
-    default:
-      x = y = 8;
-  }
+  const x = gameInfo[difficulty].x;
+  const y = gameInfo[difficulty].y;
 
   const grid = new Array(y).fill(' ').map((row, idx) => {
     row = [];
@@ -59,26 +63,9 @@ const createGrid = (difficulty) => {
 
 function createMineGrid(difficulty, xPos, yPos) {
   const mineStr = chalk.red('XX');
-  let x, y, mines;
-
-  switch (difficulty) {
-    case 'easy':
-      x = y = 8;
-      mines = 10;
-      break;
-    case 'medium':
-      x = y = 16;
-      mines = 40;
-      break;
-    case 'hard':
-      x = 32;
-      y = 16;
-      mines = 99;
-      break;
-    default:
-      x = y = 8;
-      mines = 10;
-  }
+  const x = gameInfo[difficulty].x;
+  const y = gameInfo[difficulty].y;
+  const mines = gameInfo[difficulty].mines;
 
   const mineGrid = new Array(y).fill(' ').map((row, idx) => {
     row = [];
@@ -164,9 +151,16 @@ function createMineGrid(difficulty, xPos, yPos) {
   return mineGrid;
 }
 
+const rainbow = (str) => {
+  const colors = ['redBright', 'yellowBright', 'greenBright', 'cyanBright', 'blueBright', 'magentaBright'];
+
+  return str.split('').map((char, i) => chalk.bgBlack[colors[i % colors.length]](char)).join('');
+}
+
 module.exports = {
   validateData,
   copyGrid,
   createGrid,
   createMineGrid,
-}
+  rainbow,
+};
