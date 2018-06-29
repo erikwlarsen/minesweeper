@@ -6,6 +6,7 @@ const {
   copyGrid,
   createGrid,
   createMineGrid,
+  rainbow,
 } = require('./util');
 
 const rl = readline.createInterface({
@@ -13,10 +14,11 @@ const rl = readline.createInterface({
   output: process.stdout,
 });
 
+
 initGame();
 
 function initGame() {
-  rl.question('\nWelcome to node minesweeper! Ready to begin? (y/n)\n', (answer) => {
+  rl.question(rainbow('\nWelcome to node minesweeper! Ready to begin? ') + chalk.bgBlack.gray.italic('y/n \n'), (answer) => {
     if (answer.toLowerCase() === 'y' || answer.toLowerCase() === 'yes') {
       return selectDifficulty();
     } else if (answer.toLowerCase() === 'n' || answer.toLowerCase() === 'no') {
@@ -29,7 +31,7 @@ function initGame() {
 }
 
 function selectDifficulty() {
-  rl.question('\nPlease select your difficulty level. (easy/medium/hard)\n', (answer) => {
+  rl.question(rainbow('\nPlease select your difficulty level. ') + chalk.bgBlack.gray.italic('easy/medium/hard \n'), (answer) => {
     if (answer.toLowerCase() === 'e' || answer.toLowerCase() === 'easy') {
       answer = 'easy';
     } else if (answer.toLowerCase() === 'm' || answer.toLowerCase() === 'medium') {
@@ -47,8 +49,8 @@ function selectDifficulty() {
 }
 
 function showDirections(grid, difficulty) {
-  rl.write(`\nHere's how it works.\nEnter the x-coordinate and y-coordinate of the square you want to uncover with a space in between, like ${chalk.green('8 3')} or ${chalk.green('5 7')}.\nIf you only want to flag the square instead of uncovering it, add the word flag at the end after another space, like ${chalk.blue('8 3 flag')} or ${chalk.blue('5 7 flag')}\n`);
-  rl.write('\nOkay, let\'s get started!\n');
+  rl.write(rainbow('\nHere\'s how it works.\nEnter the ') + chalk.bgBlack.whiteBright.italic('x-coordinate') + rainbow(' and ') + chalk.bgBlack.whiteBright.italic('y-coordinate') + rainbow(' of the square you want to uncover with a space in between, like ') + chalk.bgBlack.whiteBright.italic('8 3') + rainbow(' or ') + chalk.bgBlack.whiteBright.italic('5 7') + rainbow('.\nIf you only want to flag the square instead of uncovering it, add the word ') + chalk.bgBlack.whiteBright.italic('flag') + rainbow(' at the end after another space, like ') + chalk.bgBlack.whiteBright.italic('8 3 flag') + rainbow(' or ') + chalk.bgBlack.whiteBright.italic('5 7 flag') + rainbow('.\n'));
+  rl.write(rainbow('\nOkay, let\'s get started!\n'));
   return playTurn(grid, null, difficulty);
 }
 
