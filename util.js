@@ -16,7 +16,18 @@ const gameInfo = {
     x: 32,
     y: 16,
   }
-}
+};
+
+const numMap = {
+  1: chalk.bgBlack.cyan(' 1'),
+  2: chalk.bgBlack.green(' 2'),
+  3: chalk.bgBlack.red(' 3'),
+  4: chalk.bgBlack.blue(' 4'),
+  5: chalk.bgBlack.magenta(' 5'),
+  6: chalk.bgBlack.magenta(' 6'),
+  7: chalk.bgBlack.magenta(' 7'),
+  8: chalk.bgBlack.magenta(' 8'),
+};
 
 const validateData = (x, y, flag, grid) => {
   const gridX = grid[1].length - 2;
@@ -145,9 +156,7 @@ function createMineGrid(difficulty, xPos, yPos) {
             }
           });
           if (surroundingMines) {
-            surroundingMines = String(surroundingMines);
-            if (surroundingMines.length < 2) surroundingMines = ' ' + surroundingMines;
-            arr[yIdx][xIdx] = chalk.bgBlack.blue(surroundingMines);
+            arr[yIdx][xIdx] = numMap[surroundingMines];
           }
         }
       });
