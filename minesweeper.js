@@ -6,7 +6,7 @@ const {
   copyGrid,
   createGrid,
   createMineGrid,
-  rainbow,
+  paintLetters,
   spaceBlock,
   mineStrBlock,
   unclickedBlock,
@@ -19,10 +19,12 @@ const rl = readline.createInterface({
   output: process.stdout,
 });
 
+const useRainbow = !!process.env.npm_config_use_rainbow;
+
 initGame();
 
 function initGame() {
-  rl.question(rainbow('\nWelcome to node minesweeper! Ready to begin? ') + chalk.bgBlack.gray.italic('y/n \n'), (answer) => {
+  rl.question(paintLetters('\nWelcome to node minesweeper! Ready to begin? ', useRainbow) + chalk.bgBlack.gray.italic('y/n \n'), (answer) => {
     if (answer.toLowerCase() === 'y' || answer.toLowerCase() === 'yes') {
       return selectDifficulty();
     } else if (answer.toLowerCase() === 'n' || answer.toLowerCase() === 'no') {
@@ -35,7 +37,7 @@ function initGame() {
 }
 
 function selectDifficulty() {
-  rl.question(rainbow('\nPlease select your difficulty level. ') + chalk.bgBlack.gray.italic('easy/medium/hard \n'), (answer) => {
+  rl.question(paintLetters('\nPlease select your difficulty level. ', useRainbow) + chalk.bgBlack.gray.italic('easy/medium/hard \n'), (answer) => {
     if (answer.toLowerCase() === 'e' || answer.toLowerCase() === 'easy') {
       answer = 'easy';
     } else if (answer.toLowerCase() === 'm' || answer.toLowerCase() === 'medium') {
@@ -53,8 +55,24 @@ function selectDifficulty() {
 }
 
 function showDirections(grid, difficulty) {
-  rl.write(rainbow('\nHere\'s how it works.\nEnter the ') + chalk.bgBlack.whiteBright.italic('x-coordinate') + rainbow(' and ') + chalk.bgBlack.whiteBright.italic('y-coordinate') + rainbow(' of the square you want to uncover with a space in between, like ') + chalk.bgBlack.whiteBright.italic('8 3') + rainbow(' or ') + chalk.bgBlack.whiteBright.italic('5 7') + rainbow('.\nIf you only want to flag the square instead of uncovering it, add the word ') + chalk.bgBlack.whiteBright.italic('flag') + rainbow(' at the end after another space, like ') + chalk.bgBlack.whiteBright.italic('8 3 flag') + rainbow(' or ') + chalk.bgBlack.whiteBright.italic('5 7 flag') + rainbow('.\n'));
-  rl.write(rainbow('\nOkay, let\'s get started!\n'));
+  rl.write(paintLetters(
+    '\nHere\'s how it works.\n\nEnter the ', useRainbow) +
+    chalk.bgBlack.whiteBright.italic('x-coordinate') +
+    paintLetters(' and ', useRainbow) +
+    chalk.bgBlack.whiteBright.italic('y-coordinate') +
+    paintLetters(' of the square you want to uncover\nwith a space in between, like ', useRainbow) +
+    chalk.bgBlack.whiteBright.italic('8 3') +
+    paintLetters(' or ', useRainbow) +
+    chalk.bgBlack.whiteBright.italic('5 7') +
+    paintLetters('.\n\nIf you only want to flag the square instead of uncovering it, add the\nword ', useRainbow) +
+    chalk.bgBlack.whiteBright.italic('flag') +
+    paintLetters(' at the end after another space, like ', useRainbow) +
+    chalk.bgBlack.whiteBright.italic('8 3 flag') +
+    paintLetters(' or ', useRainbow) +
+    chalk.bgBlack.whiteBright.italic('5 7 flag') +
+    paintLetters('.\n', useRainbow)
+  );
+  rl.write(paintLetters('\nOkay, let\'s get started!\n', useRainbow));
   return playTurn(grid, null, difficulty);
 }
 
@@ -70,7 +88,7 @@ function playTurn(grid, mineGrid, difficulty) {
   printGrid(grid);
   if (checkWin(grid)) return youWin();
   const gridCopy = copyGrid(grid);
-  rl.question(rainbow('\nChoose a square to uncover or flag.\n'), (answer) => {
+  rl.question(paintLetters('\nChoose a square to uncover or flag.\n', useRainbow), (answer) => {
     let [x, y, flag] = answer.split(' ');
     x = Number(x);
     y = Number(y);
@@ -136,12 +154,12 @@ function click(x, y, grid, mineGrid, firstClick, spacesChecked = {}) {
 }
 
 function youWin() {
-  rl.write(rainbow('\nCONGRATULATIONS, YOU WIN!!!!\n'));
+  rl.write(paintLetters('\nCONGRATULATIONS, YOU WIN!!!!\n', true));
   return goodbye();
 }
 
 function noComprendo() {
-  rl.write(rainbow('\nSorry, I didn\'t understand that.\n'));
+  rl.write(paintLetters('\nSorry, I didn\'t understand that.\n', useRainbow));
 }
 
 function gameOver(grid) {
@@ -151,6 +169,6 @@ function gameOver(grid) {
 }
 
 function goodbye() {
-  rl.write(rainbow('\nGoodbye!\n\n'));
+  rl.write(paintLetters('\nGoodbye!\n\n', useRainbow));
   rl.close();
 }
