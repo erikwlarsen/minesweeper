@@ -1,13 +1,14 @@
 {
   "name": "minesweeper",
   "version": "1.0.0",
-  "description": "crappo minesweeper",
+  "description": "play minesweeper in the terminal with node",
   "main": "minesweeper.js",
   "dependencies": {
     "chalk": "^2.4.1"
   },
   "devDependencies": {},
   "scripts": {
+    "start": "node minesweeper.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
