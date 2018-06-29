@@ -10,6 +10,8 @@ const {
   spaceBlock,
   mineStrBlock,
   unclickedBlock,
+  flagBlock,
+  checkWin,
 } = require('./util');
 
 const rl = readline.createInterface({
@@ -66,6 +68,7 @@ function printGrid(grid) {
 
 function playTurn(grid, mineGrid, difficulty) {
   printGrid(grid);
+  if (checkWin(grid)) return youWin();
   const gridCopy = copyGrid(grid);
   rl.question(rainbow('\nChoose a square to uncover or flag.\n'), (answer) => {
     let [x, y, flag] = answer.split(' ');
@@ -78,7 +81,7 @@ function playTurn(grid, mineGrid, difficulty) {
     }
 
     if (flag) {
-      gridCopy[y][x] = chalk.yellow.bold(' F');
+      gridCopy[y][x] = flagBlock;
       return playTurn(gridCopy, mineGrid, difficulty);
     } else {
       if (!mineGrid) mineGrid = createMineGrid(difficulty, x, y);
@@ -88,7 +91,7 @@ function playTurn(grid, mineGrid, difficulty) {
 }
 
 function click(x, y, grid, mineGrid, firstClick, spacesChecked = {}) {
-  if (firstClick) spacesChecked[JSON.stringify([String(x), String(y)])] = true;;
+  if (firstClick) spacesChecked[JSON.stringify([String(x), String(y)])] = true;
   grid[y][x] = mineGrid[y][x];
 
   if (grid[y][x] === mineStrBlock) {
@@ -130,6 +133,11 @@ function click(x, y, grid, mineGrid, firstClick, spacesChecked = {}) {
   });
 
   if (firstClick) return playTurn(grid, mineGrid);
+}
+
+function youWin() {
+  rl.write(rainbow('\nCONGRATULATIONS, YOU WIN!!!!\n'));
+  return goodbye();
 }
 
 function noComprendo() {

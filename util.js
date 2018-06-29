@@ -34,6 +34,7 @@ const validateData = (x, y, flag, grid) => {
 const spaceBlock = chalk.bgBlack('  ');
 const mineStrBlock = chalk.bgBlack.red('XX');
 const unclickedBlock = chalk.bgBlack.grey(' #');
+const flagBlock = chalk.bgBlack.yellow(' F');
 
 const copyGrid = grid => grid.map((row) => row.slice());
 
@@ -158,6 +159,17 @@ function createMineGrid(difficulty, xPos, yPos) {
   return mineGrid;
 }
 
+function checkWin(grid) {
+  const { unclicked, flagged } = grid.reduce((acc, row) => {
+    acc.unclicked += row.filter(space => space === unclickedBlock).length;
+    acc.flagged += row.filter(space => space === flagBlock).length;
+    return acc;
+  }, { unclicked: 0, flagged: 0 });
+  const difficulty = Object.keys(gameInfo).filter((difficulty) => gameInfo[difficulty].x === grid[0].length - 2);
+  const mines = gameInfo[difficulty].mines;
+  return unclicked === 0 && flagged <= mines;
+}
+
 const rainbow = (str) => {
   const colors = ['redBright', 'yellowBright', 'greenBright', 'cyanBright', 'blueBright', 'magentaBright'];
 
@@ -173,4 +185,6 @@ module.exports = {
   spaceBlock,
   mineStrBlock,
   unclickedBlock,
+  flagBlock,
+  checkWin,
 };
