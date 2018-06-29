@@ -3,14 +3,11 @@ const chalk = require('chalk');
 const validateData = (x, y, flag, grid) => {
   const gridX = grid[1].length - 2;
   const gridY = grid.length - 2;
-
-  const numX = Number(x);
-  const numY = Number(y);
   
-  if (isNaN(numX) || isNaN(numY)) return false;
-  if (numX < 1 || numX > gridX || numY < 1 || numY > gridY) return false;
+  if (isNaN(x) || isNaN(y)) return false;
+  if (x < 1 || x > gridX || y < 1 || y > gridY) return false;
   if (typeof flag !== 'undefined' && typeof flag !== 'string') return false;
-  if (typeof flag === 'string' && flag !== 'flag') return false;
+  if (typeof flag === 'string' && flag !== 'flag' && flag !== 'f') return false;
 
   return true;
 }
@@ -107,10 +104,22 @@ function createMineGrid(difficulty, xPos, yPos) {
 
   const makeMine = (count) => {
     if (count === mines) return; // base case
-
     const xMine = Math.ceil(Math.random() * x);
     const yMine = Math.ceil(Math.random() * y);
-    if (mineGrid[yMine][xMine] === mineStr || (yMine === yPos && xMine === xPos)) {
+
+    const positionsToCheck = new Set([
+      `${xPos - 1} ${yPos - 1}`,
+      `${xPos - 1} ${yPos}`,
+      `${xPos - 1} ${yPos + 1}`,
+      `${xPos} ${yPos - 1}`,
+      `${xPos} ${yPos}`,
+      `${xPos} ${yPos + 1}`,
+      `${xPos + 1} ${yPos - 1}`,
+      `${xPos + 1} ${yPos}`,
+      `${xPos + 1} ${yPos + 1}`,
+    ]);
+
+    if (mineGrid[yMine][xMine] === mineStr || positionsToCheck.has(`${xMine} ${yMine}`)) {
       return makeMine(count);
     }
     mineGrid[yMine][xMine] = mineStr;
@@ -121,21 +130,21 @@ function createMineGrid(difficulty, xPos, yPos) {
 
   const makeNumbers = () => {
     mineGrid.forEach((row, yIdx, arr) => {
-      row.forEach((square, xIdx, xArr) => {
+      row.forEach((square, xIdx) => {
         if (square === '  ') {
           const positionsToCheck = [
-            [yIdx - 1, xIdx - 1],
-            [yIdx - 1, xIdx],
-            [yIdx - 1, xIdx + 1],
-            [yIdx, xIdx - 1],
-            [yIdx, xIdx + 1],
-            [yIdx + 1, xIdx - 1],
-            [yIdx + 1, xIdx],
-            [yIdx + 1, xIdx + 1],
+            [xIdx - 1, yIdx - 1],
+            [xIdx - 1, yIdx],
+            [xIdx - 1, yIdx + 1],
+            [xIdx, yIdx - 1],
+            [xIdx, yIdx + 1],
+            [xIdx + 1, yIdx - 1],
+            [xIdx + 1, yIdx],
+            [xIdx + 1, yIdx + 1],
           ];
 
           let surroundingMines = 0;
-          positionsToCheck.forEach(([y, x]) => {
+          positionsToCheck.forEach(([x, y]) => {
             if (arr[y] && arr[y][x] === mineStr) {
               surroundingMines += 1;
             }
