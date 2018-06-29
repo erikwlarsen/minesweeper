@@ -172,3 +172,8 @@ function goodbye() {
   rl.write(paintLetters('\nGoodbye!\n\n', useRainbow));
   rl.close();
 }
+
+// function clear() {
+//   const clearStr = '\n'.repeat(2000);
+//   rl.write(clearStr);
+// }
