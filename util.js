@@ -181,8 +181,15 @@ function checkWin(grid) {
 
 const rainbow = (str) => {
   const colors = ['redBright', 'yellowBright', 'greenBright', 'cyanBright', 'blueBright', 'magentaBright'];
-
   return str.split('').map((char, i) => chalk.bgBlack[colors[i % colors.length]](char)).join('');
+}
+
+const yellow = (str) => {
+  return str.split('').map((char, i) => chalk.bgBlack.yellow(char)).join('');
+}
+
+const paintLetters = (str, useRainbow) => {
+  return useRainbow ? rainbow(str) : yellow(str);
 }
 
 module.exports = {
@@ -190,7 +197,7 @@ module.exports = {
   copyGrid,
   createGrid,
   createMineGrid,
-  rainbow,
+  paintLetters,
   spaceBlock,
   mineStrBlock,
   unclickedBlock,
