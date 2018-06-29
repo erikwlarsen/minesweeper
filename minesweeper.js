@@ -63,14 +63,16 @@ function playTurn(grid, mineGrid, difficulty) {
   printGrid(grid);
   const gridCopy = copyGrid(grid);
   rl.question('\nChoose a square to uncover or flag.\n', (answer) => {
-    const [x, y, flag] = answer.split(' ');
+    let [x, y, flag] = answer.split(' ');
+    x = Number(x);
+    y = Number(y);
 
     if (!validateData(x, y, flag, grid)) {
       noComprendo();
       return playTurn(grid, mineGrid, difficulty);
     }
 
-    if (flag === 'flag') {
+    if (flag) {
       gridCopy[y][x] = chalk.yellow.bold(' F');
       return playTurn(gridCopy, mineGrid, difficulty);
     } else {
@@ -80,15 +82,10 @@ function playTurn(grid, mineGrid, difficulty) {
   });
 }
 
-let counter = 0;
-
 function click(x, y, grid, mineGrid, firstClick, spacesChecked = {}) {
   if (firstClick) spacesChecked[JSON.stringify([String(x), String(y)])] = true;;
-  // console.log('CLICK CALL', counter++);
   const mineStr = chalk.red('XX');
-  // console.log('MINE GRID', mineGrid);
   grid[y][x] = mineGrid[y][x];
-  console.log('GRID AT GIVEN POSITION AFTER REVEAL', grid[y][x]);
 
   if (grid[y][x] === mineStr) {
     if (firstClick) return gameOver(grid);
@@ -97,17 +94,12 @@ function click(x, y, grid, mineGrid, firstClick, spacesChecked = {}) {
       return;
     };
   }
-  console.log('GOT PAST MINE CONDITIONAL')
   // case for numbers
   if (grid[y][x] !== '  ') {
     if (firstClick) return playTurn(grid, mineGrid);
     else return;
   }
-  console.log('GOT PAST SPACES CONDITIONAL');
   
-  // HOW TO PROPAGATE CLEARING SQUARES CORRECTLY? something to do with squares with numbers on them
-  // Redo mineLocations - instead have two objects of identical structure (same as current grid),
-  // one with mines and numbers and one that will be shown to user and can reveal the "true" grid as we go.
   const positionsToCheck = [
     [x - 1, y - 1],
     [x, y - 1],
@@ -121,7 +113,6 @@ function click(x, y, grid, mineGrid, firstClick, spacesChecked = {}) {
 
   positionsToCheck.forEach(([xPos, yPos]) => {
     const stringifyXY = JSON.stringify([String(xPos), String(yPos)]);
-    console.log('SPACES CHECKED', spacesChecked);
     if (
       xPos > 0 &&
       xPos < grid[1].length - 1 &&
@@ -151,7 +142,3 @@ function goodbye() {
   rl.write('\nGoodbye!\n\n')
   rl.close();
 }
-
-// const testGrid = createMineGrid('easy', 5, 4);
-
-// printGrid(testGrid);
