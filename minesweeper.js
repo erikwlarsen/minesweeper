@@ -7,13 +7,15 @@ const {
   createGrid,
   createMineGrid,
   rainbow,
+  spaceBlock,
+  mineStrBlock,
+  unclickedBlock,
 } = require('./util');
 
 const rl = readline.createInterface({
   input: process.stdin,
   output: process.stdout,
 });
-
 
 initGame();
 
@@ -57,14 +59,15 @@ function showDirections(grid, difficulty) {
 function printGrid(grid) {
   rl.write('\n');
   grid.forEach((row) => {
-    console.log(...row);
+    const printRow = row.join(chalk.bgBlack(' '));
+    console.log(printRow);
   });
 }
 
 function playTurn(grid, mineGrid, difficulty) {
   printGrid(grid);
   const gridCopy = copyGrid(grid);
-  rl.question('\nChoose a square to uncover or flag.\n', (answer) => {
+  rl.question(rainbow('\nChoose a square to uncover or flag.\n'), (answer) => {
     let [x, y, flag] = answer.split(' ');
     x = Number(x);
     y = Number(y);
@@ -86,18 +89,17 @@ function playTurn(grid, mineGrid, difficulty) {
 
 function click(x, y, grid, mineGrid, firstClick, spacesChecked = {}) {
   if (firstClick) spacesChecked[JSON.stringify([String(x), String(y)])] = true;;
-  const mineStr = chalk.red('XX');
   grid[y][x] = mineGrid[y][x];
 
-  if (grid[y][x] === mineStr) {
+  if (grid[y][x] === mineStrBlock) {
     if (firstClick) return gameOver(grid);
     else {
-      grid[y][x] = ' #';
+      grid[y][x] = unclickedBlock;
       return;
     };
   }
   // case for numbers
-  if (grid[y][x] !== '  ') {
+  if (grid[y][x] !== spaceBlock) {
     if (firstClick) return playTurn(grid, mineGrid);
     else return;
   }
@@ -131,7 +133,7 @@ function click(x, y, grid, mineGrid, firstClick, spacesChecked = {}) {
 }
 
 function noComprendo() {
-  rl.write('\nSorry, I didn\'t understand that.\n');
+  rl.write(rainbow('\nSorry, I didn\'t understand that.\n'));
 }
 
 function gameOver(grid) {

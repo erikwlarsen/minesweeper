@@ -30,6 +30,11 @@ const validateData = (x, y, flag, grid) => {
   return true;
 }
 
+// use these blocks to build grid and match spaceBlocks during turns
+const spaceBlock = chalk.bgBlack('  ');
+const mineStrBlock = chalk.bgBlack.red('XX');
+const unclickedBlock = chalk.bgBlack.grey(' #');
+
 const copyGrid = grid => grid.map((row) => row.slice());
 
 const createGrid = (difficulty) => {
@@ -40,20 +45,23 @@ const createGrid = (difficulty) => {
     row = [];
     let strNum = String(idx + 1);
     if (strNum.length < 2) strNum = ' ' + strNum;
+    strNum = chalk.bgBlack.white(strNum);
     row.push(strNum);
     for (let i = 0; i < x; i++) {
-      row.push(chalk.grey(' #'));
+      row.push(unclickedBlock);
     }
-    row.push(strNum);
+    row.push(strNum + chalk.bgBlack(' '));
     return row;
   });
 
-  let xNums = ['  '];
+  let xNums = [spaceBlock];
   for (let i = 1; i <= x; i++) {
     let strNum = String(i);
     if (strNum.length < 2) strNum = ' ' + strNum;
+    strNum = chalk.bgBlack.white(strNum);
     xNums.push(strNum);
   }
+  xNums.push(spaceBlock + chalk.bgBlack(' '));
   
   grid.push(xNums);
   grid.unshift(xNums);
@@ -62,7 +70,6 @@ const createGrid = (difficulty) => {
 }
 
 function createMineGrid(difficulty, xPos, yPos) {
-  const mineStr = chalk.red('XX');
   const x = gameInfo[difficulty].x;
   const y = gameInfo[difficulty].y;
   const mines = gameInfo[difficulty].mines;
@@ -73,7 +80,7 @@ function createMineGrid(difficulty, xPos, yPos) {
     if (strNum.length < 2) strNum = ' ' + strNum;
     row.push(strNum);
     for (let i = 0; i < x; i++) {
-      row.push('  ');
+      row.push(spaceBlock);
     }
     row.push(strNum);
     return row;
@@ -106,10 +113,10 @@ function createMineGrid(difficulty, xPos, yPos) {
       `${xPos + 1} ${yPos + 1}`,
     ]);
 
-    if (mineGrid[yMine][xMine] === mineStr || positionsToCheck.has(`${xMine} ${yMine}`)) {
+    if (mineGrid[yMine][xMine] === mineStrBlock || positionsToCheck.has(`${xMine} ${yMine}`)) {
       return makeMine(count);
     }
-    mineGrid[yMine][xMine] = mineStr;
+    mineGrid[yMine][xMine] = mineStrBlock;
     return makeMine(count + 1);
   }
 
@@ -118,7 +125,7 @@ function createMineGrid(difficulty, xPos, yPos) {
   const makeNumbers = () => {
     mineGrid.forEach((row, yIdx, arr) => {
       row.forEach((square, xIdx) => {
-        if (square === '  ') {
+        if (square === spaceBlock) {
           const positionsToCheck = [
             [xIdx - 1, yIdx - 1],
             [xIdx - 1, yIdx],
@@ -132,14 +139,14 @@ function createMineGrid(difficulty, xPos, yPos) {
 
           let surroundingMines = 0;
           positionsToCheck.forEach(([x, y]) => {
-            if (arr[y] && arr[y][x] === mineStr) {
+            if (arr[y] && arr[y][x] === mineStrBlock) {
               surroundingMines += 1;
             }
           });
           if (surroundingMines) {
             surroundingMines = String(surroundingMines);
             if (surroundingMines.length < 2) surroundingMines = ' ' + surroundingMines;
-            arr[yIdx][xIdx] = chalk.blue(surroundingMines);
+            arr[yIdx][xIdx] = chalk.bgBlack.blue(surroundingMines);
           }
         }
       });
@@ -163,4 +170,7 @@ module.exports = {
   createGrid,
   createMineGrid,
   rainbow,
+  spaceBlock,
+  mineStrBlock,
+  unclickedBlock,
 };
