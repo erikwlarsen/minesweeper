@@ -85,6 +85,7 @@ function printGrid(grid) {
 }
 
 function playTurn(grid, mineGrid, difficulty) {
+  clear();
   printGrid(grid);
   if (checkWin(grid)) return youWin();
   const gridCopy = copyGrid(grid);
@@ -163,6 +164,7 @@ function noComprendo() {
 }
 
 function gameOver(grid) {
+  clear();
   printGrid(grid);
   rl.write(`You hit a mine!! ${chalk.red('X(')}\nGAME OVER\n`);
   return goodbye();
@@ -173,7 +175,7 @@ function goodbye() {
   rl.close();
 }
 
-// function clear() {
-//   const clearStr = '\n'.repeat(2000);
-//   rl.write(clearStr);
-// }
+function clear() {
+  readline.cursorTo(process.stdout, 0, 0);
+  readline.clearScreenDown(process.stdout);
+}
