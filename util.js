@@ -174,7 +174,7 @@ function checkWin(grid) {
     acc.flagged += row.filter(space => space === flagBlock).length;
     return acc;
   }, { unclicked: 0, flagged: 0 });
-  const difficulty = Object.keys(gameInfo).filter((difficulty) => gameInfo[difficulty].x === grid[0].length - 2);
+  const difficulty = Object.keys(gameInfo).find((difficulty) => gameInfo[difficulty].x === grid[0].length - 2);
   const mines = gameInfo[difficulty].mines;
   return unclicked === 0 && flagged <= mines;
 }
