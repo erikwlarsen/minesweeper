@@ -55,6 +55,7 @@ function selectDifficulty() {
 }
 
 function showDirections(grid, difficulty) {
+  clear();
   rl.write(paintLetters(
     '\nHere\'s how it works.\n\nEnter the ', useRainbow) +
     chalk.bgBlack.whiteBright.italic('x-coordinate') +
@@ -85,11 +86,11 @@ function printGrid(grid) {
 }
 
 function playTurn(grid, mineGrid, difficulty) {
-  clear();
   printGrid(grid);
   if (checkWin(grid)) return youWin();
   const gridCopy = copyGrid(grid);
   rl.question(paintLetters('\nChoose a square to uncover or flag.\n', useRainbow), (answer) => {
+    clear();
     let [x, y, flag] = answer.split(' ');
     x = Number(x);
     y = Number(y);
